@@ -1,0 +1,114 @@
+/**
+ * Animation Keyframes & Accessibility Motion Preferences
+ * Conforms to WCAG 2.1 2.3.3 Animation from Interactions (Level AAA).
+ */
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Skeleton Loading Shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-subtle) 25%,
+    var(--surface-card-hover) 50%,
+    var(--surface-subtle) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s infinite;
+  border-radius: var(--radius-sm);
+  color: transparent !important;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Animated Weather SVG Icons */
+.icon-sun circle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.icon-sun g {
+  transform-origin: 32px 32px;
+  animation: spin-slow 24s linear infinite;
+}
+
+.icon-clouds path:first-child {
+  animation: float-gentle 5s ease-in-out infinite alternate;
+}
+
+.icon-rain g line,
+.icon-heavy-rain g line {
+  stroke-dasharray: 8;
+  animation: rain-fall 0.8s linear infinite;
+}
+
+@keyframes rain-fall {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 16;
+  }
+}
+
+/* Reduced Motion Override conforming to modern-web-guidance */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .icon-sun g,
+  .icon-sun circle,
+  .icon-clouds path,
+  .icon-rain g line,
+  .clock-dot {
+    animation: none !important;
+  }
+}
