@@ -292,5 +292,47 @@ test('index.html - pure live mode with no mock metric data', async () => {
   assert.ok(html.includes('id="lifestyle-outdoor" class="lifestyle-advice">Awaiting live weather data...<'));
 });
 
+test('WeatherAudioEngine - synchronizes soundscape with live weather states', async () => {
+  const { WeatherAudioEngine } = await import('../js/audio.js');
+
+  const engine = new WeatherAudioEngine();
+
+  // Test rain state
+  engine.setWeather({ category: 'rain', isDay: true, windSpeed: 20 });
+  assert.equal(engine.weatherState.category, 'rain');
+  assert.equal(engine.getSoundscapeDescription(), 'Soothing Rain & Gentle Droplets');
+
+  // Test thunderstorm state
+  engine.setWeather({ category: 'thunder', isDay: false, windSpeed: 45 });
+  assert.equal(engine.weatherState.category, 'thunder');
+  assert.equal(engine.getSoundscapeDescription(), 'Thunderstorm & Rolling Rumbles');
+
+  // Test snow state
+  engine.setWeather({ category: 'snow', isDay: true, windSpeed: 15 });
+  assert.equal(engine.weatherState.category, 'snow');
+  assert.equal(engine.getSoundscapeDescription(), 'Soft Whispering Winter Breeze');
+
+  // Test sunny clear day state
+  engine.setWeather({ category: 'clear', isDay: true, windSpeed: 8 });
+  assert.equal(engine.weatherState.category, 'clear');
+  assert.equal(engine.weatherState.isDay, true);
+  assert.equal(engine.getSoundscapeDescription(), 'Warm Sunlit Breeze & Distant Birdsong');
+
+  // Test starry clear night state
+  engine.setWeather({ category: 'clear', isDay: false, windSpeed: 5 });
+  assert.equal(engine.weatherState.category, 'clear');
+  assert.equal(engine.weatherState.isDay, false);
+  assert.equal(engine.getSoundscapeDescription(), 'Calm Starry Night & Field Crickets');
+
+  // Test clouds state
+  engine.setWeather({ category: 'clouds', isDay: true });
+  assert.equal(engine.getSoundscapeDescription(), 'Rolling Atmospheric Cloud Breeze');
+
+  // Test fog state
+  engine.setWeather({ category: 'fog', isDay: true });
+  assert.equal(engine.getSoundscapeDescription(), 'Peaceful Misty Wind');
+});
+
+
 
 

@@ -177,11 +177,21 @@ class SkyPulseApp {
     // Sound toggle
     if (this.soundToggleBtn) {
       this.soundToggleBtn.addEventListener('click', () => {
+        if (this.weatherData) {
+          const wInfo = getWeatherInfo(this.weatherData.current.weather_code, this.weatherData.current.is_day);
+          weatherAudio.setWeather({
+            category: wInfo.category,
+            isDay: Boolean(this.weatherData.current.is_day),
+            windSpeed: this.weatherData.current.wind_speed_10m || 12,
+            weatherCode: this.weatherData.current.weather_code
+          });
+        }
         const isPlaying = weatherAudio.toggle();
         StorageManager.setSoundEnabled(isPlaying);
         this.soundToggleBtn.setAttribute('aria-pressed', String(isPlaying));
         this.soundToggleBtn.innerHTML = `${isPlaying ? getIcon('sound-on') : getIcon('sound-off')} <span>${isPlaying ? 'Sound On' : 'Sound Off'}</span>`;
-        this.announce(isPlaying ? 'Ambient weather audio enabled' : 'Ambient weather audio muted');
+        const desc = weatherAudio.getSoundscapeDescription();
+        this.announce(isPlaying ? `Ambient audio enabled: ${desc}` : 'Ambient weather audio muted');
       });
     }
 
@@ -547,7 +557,12 @@ class SkyPulseApp {
       if (this.ambientCanvas) {
         this.ambientCanvas.setWeather(weatherInfo.category, data.current.is_day, themeManager.currentResolvedTheme);
       }
-      weatherAudio.setWeatherMode(weatherInfo.category);
+      weatherAudio.setWeather({
+        category: weatherInfo.category,
+        isDay: Boolean(data.current.is_day),
+        windSpeed: data.current.wind_speed_10m || 12,
+        weatherCode: data.current.weather_code
+      });
 
     } catch (err) {
       console.error('Failed to load live weather:', err);
