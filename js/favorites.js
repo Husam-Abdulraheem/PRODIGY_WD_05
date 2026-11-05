@@ -19,17 +19,39 @@ export class StorageManager {
     }
   }
 
-  static isFavorite(lat, lon) {
+  static isFavorite(latOrLoc, lon) {
+    if (!latOrLoc) return false;
     const favs = this.getFavorites();
+    if (typeof latOrLoc === 'object') {
+      const lat = latOrLoc.latitude;
+      const lng = latOrLoc.longitude;
+      const name = latOrLoc.name ? latOrLoc.name.toLowerCase().trim() : '';
+      return favs.some(f => {
+        const coordsMatch = (lat != null && lng != null && f.latitude != null && f.longitude != null)
+          ? (Math.abs(f.latitude - lat) < 0.05 && Math.abs(f.longitude - lng) < 0.05)
+          : false;
+        const nameMatch = name && f.name && (f.name.toLowerCase().trim() === name);
+        return coordsMatch || (nameMatch && (f.country || '') === (latOrLoc.country || ''));
+      });
+    }
+    const lat = Number(latOrLoc);
     return favs.some(f => Math.abs(f.latitude - lat) < 0.05 && Math.abs(f.longitude - lon) < 0.05);
   }
 
   static toggleFavorite(location) {
+    if (!location || !location.name) return { isAdded: false, favorites: this.getFavorites() };
     let favs = this.getFavorites();
-    const index = favs.findIndex(f =>
-      Math.abs(f.latitude - location.latitude) < 0.05 &&
-      Math.abs(f.longitude - location.longitude) < 0.05
-    );
+    const lat = location.latitude;
+    const lon = location.longitude;
+    const name = location.name.toLowerCase().trim();
+
+    const index = favs.findIndex(f => {
+      const coordsMatch = (lat != null && lon != null && f.latitude != null && f.longitude != null)
+        ? (Math.abs(f.latitude - lat) < 0.05 && Math.abs(f.longitude - lon) < 0.05)
+        : false;
+      const nameMatch = f.name && (f.name.toLowerCase().trim() === name);
+      return coordsMatch || (nameMatch && (f.country || '') === (location.country || ''));
+    });
 
     let isAdded = false;
     if (index >= 0) {

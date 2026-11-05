@@ -179,6 +179,37 @@ test('StorageManager - handles user location persistence', () => {
   delete globalThis.localStorage;
 });
 
+test('StorageManager - toggles and queries favorite cities accurately', () => {
+  const store = {};
+  globalThis.localStorage = {
+    getItem: (key) => store[key] || null,
+    setItem: (key, val) => { store[key] = String(val); },
+    removeItem: (key) => { delete store[key]; }
+  };
+
+  const amman = { name: 'Amman', country: 'Jordan', latitude: 31.9454, longitude: 35.9284 };
+  const tokyo = { name: 'Tokyo', country: 'Japan', latitude: 35.6762, longitude: 139.6503 };
+
+  assert.equal(StorageManager.isFavorite(tokyo), false);
+  assert.equal(StorageManager.isFavorite(amman), false);
+
+  // Star Tokyo
+  const res1 = StorageManager.toggleFavorite(tokyo);
+  assert.equal(res1.isAdded, true);
+  assert.equal(StorageManager.isFavorite(tokyo), true);
+  assert.equal(StorageManager.isFavorite(amman), false);
+
+  // Query Tokyo by lat/lon
+  assert.equal(StorageManager.isFavorite(35.6762, 139.6503), true);
+
+  // Unstar Tokyo
+  const res2 = StorageManager.toggleFavorite(tokyo);
+  assert.equal(res2.isAdded, false);
+  assert.equal(StorageManager.isFavorite(tokyo), false);
+
+  delete globalThis.localStorage;
+});
+
 test('WeatherCanvas - initializes and adapts to weather states and themes', async () => {
   const { WeatherCanvas } = await import('../js/weather-canvas.js');
 

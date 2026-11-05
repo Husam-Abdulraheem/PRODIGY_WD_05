@@ -350,7 +350,7 @@ class SkyPulseApp {
 
   updateFavoriteButtonState() {
     if (!this.favoriteBtn || !this.currentLocation) return;
-    const isFav = StorageManager.isFavorite(this.currentLocation.latitude, this.currentLocation.longitude);
+    const isFav = StorageManager.isFavorite(this.currentLocation);
     this.favoriteBtn.innerHTML = isFav ? getIcon('star-filled') : getIcon('star-outline');
     this.favoriteBtn.setAttribute('aria-label', isFav ? 'Remove from favorite locations' : 'Add to favorite locations');
     this.favoriteBtn.classList.toggle('favorited', isFav);
@@ -533,7 +533,10 @@ class SkyPulseApp {
   }
 
   async loadWeatherForLocation(location) {
+    if (!location) return;
+    this.currentLocation = location;
     this.setSkeletonState(true);
+    this.updateFavoriteButtonState();
     this.announce(`Fetching live weather for ${location.name}...`);
     this.hideErrorCard();
 
@@ -963,11 +966,17 @@ class SkyPulseApp {
     });
 
 
-    const otherPillsHtml = allPills.slice(0, 7).map(loc => {
-      const isActive = !isMyLocationActive && this.currentLocation && loc.name === this.currentLocation.name;
-      const star = loc.isFav ? '★ ' : '';
+    const otherPillsHtml = allPills.slice(0, 7).map((loc, idx) => {
+      const isActive = !isMyLocationActive && this.currentLocation && (
+        (loc.latitude != null && this.currentLocation.latitude != null &&
+         Math.abs(loc.latitude - this.currentLocation.latitude) < 0.05 &&
+         Math.abs(loc.longitude - this.currentLocation.longitude) < 0.05) ||
+        (loc.name.toLowerCase().trim() === this.currentLocation.name.toLowerCase().trim())
+      );
+      const isFav = StorageManager.isFavorite(loc);
+      const star = isFav ? '★ ' : '';
       return `
-        <button class="city-pill ${isActive ? 'active' : ''}" data-name="${loc.name}" type="button">
+        <button class="city-pill ${isActive ? 'active' : ''}" data-index="${idx}" type="button">
           ${star}${loc.name}
         </button>
       `;
@@ -980,7 +989,7 @@ class SkyPulseApp {
     if (locPill) {
       locPill.addEventListener('click', () => {
         if (this.detectedUserLocation) {
-          this.loadWeatherForLocation(this.detectedUserLocation);
+          this.selectLocation(this.detectedUserLocation);
         } else {
           this.handleDetectLocation();
         }
@@ -990,10 +999,10 @@ class SkyPulseApp {
     // Attach click listeners to other city pills
     this.quickPills.querySelectorAll('.city-pill:not(.location-pill)').forEach(btn => {
       btn.addEventListener('click', () => {
-        const name = btn.dataset.name;
-        const target = allPills.find(p => p.name === name);
+        const idx = Number(btn.dataset.index);
+        const target = allPills[idx];
         if (target) {
-          this.loadWeatherForLocation(target);
+          this.selectLocation(target);
         }
       });
     });
