@@ -30,7 +30,9 @@ import { getIcon } from './js/icons.js';
 
 class SkyPulseApp {
   constructor() {
-    this.currentLocation = DEFAULT_LOCATIONS[0]; // Start with London
+    const savedUserLoc = StorageManager.getUserLocation();
+    this.detectedUserLocation = savedUserLoc;
+    this.currentLocation = savedUserLoc || DEFAULT_LOCATIONS[0];
     this.weatherData = null;
     this.unit = StorageManager.getUnit();
     this.hourlyView = 'cards';
@@ -371,6 +373,9 @@ class SkyPulseApp {
         const { latitude, longitude } = pos.coords;
         this.announce('Location identified. Fetching weather details...');
         const locInfo = await reverseGeocode(latitude, longitude);
+        locInfo.isDeviceLocation = true;
+        this.detectedUserLocation = locInfo;
+        StorageManager.setUserLocation(locInfo);
         this.currentLocation = locInfo;
         StorageManager.addToHistory(locInfo);
         await this.loadWeatherForLocation(locInfo);
@@ -826,9 +831,32 @@ class SkyPulseApp {
     const favorites = StorageManager.getFavorites();
     const history = StorageManager.getHistory();
 
-    // Combine distinct locations
+    // Check if the current location is the user's device location
+    const isMyLocationActive = Boolean(
+      this.currentLocation &&
+      (this.currentLocation.isDeviceLocation ||
+        (this.detectedUserLocation &&
+          Math.abs(this.currentLocation.latitude - this.detectedUserLocation.latitude) < 0.05 &&
+          Math.abs(this.currentLocation.longitude - this.detectedUserLocation.longitude) < 0.05))
+    );
+
+    const locationName = this.detectedUserLocation ? this.detectedUserLocation.name : 'My Location';
+
+    // 1. User Location Pill (Always at the very beginning with location icon)
+    const myLocationPillHtml = `
+      <button class="city-pill location-pill ${isMyLocationActive ? 'active' : ''}" id="quick-my-location-pill" type="button" aria-label="Use current location (${locationName})">
+        ${getIcon('location')}
+        <span>${locationName}</span>
+      </button>
+    `;
+
+    // 2. Combine distinct locations for subsequent pills
     const allPills = [];
     const seen = new Set();
+
+    if (this.detectedUserLocation) {
+      seen.add(`${this.detectedUserLocation.name}_${this.detectedUserLocation.country}`);
+    }
 
     favorites.forEach(f => {
       const key = `${f.name}_${f.country}`;
@@ -849,23 +877,38 @@ class SkyPulseApp {
     // If still short, add default presets
     DEFAULT_LOCATIONS.forEach(d => {
       const key = `${d.name}_${d.country}`;
-      if (!seen.has(key) && allPills.length < 8) {
+      if (!seen.has(key) && allPills.length < 7) {
         seen.add(key);
         allPills.push({ ...d, isFav: false });
       }
     });
 
-    this.quickPills.innerHTML = allPills.slice(0, 8).map(loc => {
-      const isActive = this.currentLocation && loc.name === this.currentLocation.name;
+    const otherPillsHtml = allPills.slice(0, 7).map(loc => {
+      const isActive = !isMyLocationActive && this.currentLocation && loc.name === this.currentLocation.name;
       const star = loc.isFav ? '★ ' : '';
       return `
-        <button class="city-pill ${isActive ? 'active' : ''}" data-name="${loc.name}">
+        <button class="city-pill ${isActive ? 'active' : ''}" data-name="${loc.name}" type="button">
           ${star}${loc.name}
         </button>
       `;
     }).join('');
 
-    this.quickPills.querySelectorAll('.city-pill').forEach(btn => {
+    this.quickPills.innerHTML = myLocationPillHtml + otherPillsHtml;
+
+    // Attach click listener to My Location pill
+    const locPill = document.getElementById('quick-my-location-pill');
+    if (locPill) {
+      locPill.addEventListener('click', () => {
+        if (this.detectedUserLocation) {
+          this.loadWeatherForLocation(this.detectedUserLocation);
+        } else {
+          this.handleDetectLocation();
+        }
+      });
+    }
+
+    // Attach click listeners to other city pills
+    this.quickPills.querySelectorAll('.city-pill:not(.location-pill)').forEach(btn => {
       btn.addEventListener('click', () => {
         const name = btn.dataset.name;
         const target = allPills.find(p => p.name === name);

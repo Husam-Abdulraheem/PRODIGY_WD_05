@@ -302,6 +302,9 @@
 }
 
 .city-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.35rem 0.85rem;
   background: var(--surface-card);
   backdrop-filter: blur(8px);
@@ -311,6 +314,12 @@
   font-weight: 500;
   color: var(--text-main);
   transition: all var(--transition-fast);
+}
+
+.city-pill svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .city-pill:hover {
@@ -323,6 +332,32 @@
   background: var(--accent-primary);
   color: #ffffff;
   border-color: var(--accent-primary);
+}
+
+.city-pill.location-pill {
+  font-weight: 600;
+  background: var(--surface-subtle);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: var(--accent-primary);
+}
+
+.city-pill.location-pill svg {
+  color: var(--accent-primary);
+}
+
+.city-pill.location-pill:hover {
+  background: var(--surface-card-hover);
+  border-color: var(--accent-primary);
+}
+
+.city-pill.location-pill.active {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border-color: var(--accent-primary);
+}
+
+.city-pill.location-pill.active svg {
+  color: #ffffff;
 }
 
 /* Weather Hero Card */

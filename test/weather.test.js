@@ -23,6 +23,7 @@ import {
   generateMockWeather
 } from '../js/weather-api.js';
 
+import { StorageManager } from '../js/favorites.js';
 import { ICONS, getIcon } from '../js/icons.js';
 
 test('WMO Code Interpreter - maps known codes accurately', () => {
@@ -148,3 +149,26 @@ test('Icons Library - returns valid SVG strings', () => {
   assert.ok(getIcon('sun').includes('<svg'));
   assert.ok(getIcon('non-existent-key').includes('<svg')); // Fallback icon
 });
+
+test('StorageManager - handles user location persistence', () => {
+  const store = {};
+  globalThis.localStorage = {
+    getItem: (key) => store[key] || null,
+    setItem: (key, val) => { store[key] = String(val); },
+    removeItem: (key) => { delete store[key]; }
+  };
+
+  assert.equal(StorageManager.getUserLocation(), null);
+  const sampleLoc = { name: 'Riyadh', country: 'Saudi Arabia', latitude: 24.7136, longitude: 46.6753 };
+  StorageManager.setUserLocation(sampleLoc);
+
+  const retrieved = StorageManager.getUserLocation();
+  assert.equal(retrieved.name, 'Riyadh');
+  assert.equal(retrieved.latitude, 24.7136);
+
+  StorageManager.setUserLocation(null);
+  assert.equal(StorageManager.getUserLocation(), null);
+
+  delete globalThis.localStorage;
+});
+

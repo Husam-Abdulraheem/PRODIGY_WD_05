@@ -7,6 +7,7 @@ const HISTORY_KEY = 'sky_pulse_history';
 const UNIT_KEY = 'sky_pulse_unit';
 const ANIMATIONS_KEY = 'sky_pulse_animations';
 const SOUND_KEY = 'sky_pulse_sound';
+const USER_LOC_KEY = 'sky_pulse_user_loc';
 
 export const DEFAULT_FAVORITES = [
   {
@@ -169,6 +170,27 @@ export class StorageManager {
   static setSoundEnabled(enabled) {
     try {
       localStorage.setItem(SOUND_KEY, String(enabled));
+    } catch {
+      // Storage unavailable
+    }
+  }
+
+  static getUserLocation() {
+    try {
+      const data = localStorage.getItem(USER_LOC_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  static setUserLocation(location) {
+    try {
+      if (location) {
+        localStorage.setItem(USER_LOC_KEY, JSON.stringify(location));
+      } else {
+        localStorage.removeItem(USER_LOC_KEY);
+      }
     } catch {
       // Storage unavailable
     }
