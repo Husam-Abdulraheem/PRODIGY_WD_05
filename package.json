@@ -1,0 +1,27 @@
+{
+  "name": "prodigy_wd_05",
+  "version": "1.0.0",
+  "description": "Modern, responsive, and accessible Weather Dashboard Web Application fetching live weather conditions, hourly & 7-day forecast, air quality, and geolocation for Prodigy InfoTech Web Development Internship Task-05.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "lint": "node ./scripts/lint.js",
+    "build": "node ./scripts/build-check.js",
+    "check": "npm run test && npm run lint && npm run build"
+  },
+  "keywords": [
+    "weather-app",
+    "open-meteo-api",
+    "geolocation",
+    "forecast",
+    "air-quality",
+    "javascript",
+    "html5",
+    "css3",
+    "accessibility",
+    "dark-mode",
+    "prodigy-infotech"
+  ],
+  "author": "Husam Abdulraheem <ht93297@gmail.com>",
+  "license": "MIT"
+}
