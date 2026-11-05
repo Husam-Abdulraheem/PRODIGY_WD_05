@@ -37,8 +37,7 @@
 * **Web Audio Ambient Soundscapes**: Synthesizes soothing weather soundscapes (gentle breeze, rain patter) using native Web Audio API oscillators and filters (zero external audio dependencies).
 * **Zero-FOUC Theme Switcher**: Conforms to `modern-web-guidance` (`<meta name="color-scheme">` synchronized with CSS cascade, `localStorage`, and OS media queries).
 * **Metric (°C, km/h) / Imperial (°F, mph) Unit Switcher**: Instant reactive conversion across all temperature and wind metrics without extra network roundtrips.
-* **Web Share API**: Share weather forecasts with one tap via native device share sheets or clipboard.
-* **Offline Resilience**: Automatically detects network loss, displays status banners, and provides reliable mock fallback data for offline operation.
+* **Pure Live Mode & User-Friendly Errors**: Strictly fetches real-time data from Open-Meteo with zero mock/demo data. Detects network loss or service interruptions and displays clear, user-friendly error banners and retry prompts.
 
 ---
 
@@ -100,8 +99,9 @@ npm run check
 4. `Wind Cardinal Compass`: Validates 360° to 16-point cardinal compass conversion.
 5. `Unit Conversions`: Verifies mathematical accuracy of Celsius to Fahrenheit, km/h to mph, and hPa to inHg.
 6. `Default Locations`: Validates coordinates and metadata for all city presets.
-7. `Mock Weather Generator`: Ensures the complete schema (current, 24h hourly, 7d daily, air quality) is generated for offline fallback.
+7. `Live Weather API Rejection`: Confirms API rejects network failures cleanly without returning mock data.
 8. `Icons Library`: Confirms all SVG icon strings render valid vector markup.
+9. `StorageManager`: Verifies user location persistence and retrieval.
 
 ---
 

@@ -298,7 +298,7 @@ class SkyPulseApp {
     });
 
     window.addEventListener('offline', () => {
-      this.showStatusBanner('You are currently offline. Showing cached weather.', 'offline');
+      this.showStatusBanner('You appear to be offline. An internet connection is required to fetch live weather data.', 'error');
     });
 
     if (this.bannerRetryBtn) {
@@ -401,44 +401,55 @@ class SkyPulseApp {
 
   // Search logic
   async handleSearch(query) {
-    const results = await searchLocations(query);
-    this.searchResults = results;
-    this.selectedResultIndex = -1;
+    try {
+      const results = await searchLocations(query);
+      this.searchResults = results;
+      this.selectedResultIndex = -1;
 
-    if (!this.autocompleteList) return;
+      if (!this.autocompleteList) return;
 
-    if (results.length === 0) {
-      this.autocompleteList.innerHTML = `
-        <div class="autocomplete-item" style="cursor: default; color: var(--text-muted);">
-          No matching cities found. Try another spelling.
-        </div>
-      `;
+      if (results.length === 0) {
+        this.autocompleteList.innerHTML = `
+          <div class="autocomplete-item" style="cursor: default; color: var(--text-muted);">
+            No matching cities found. Try another spelling.
+          </div>
+        `;
+        this.autocompleteList.classList.add('open');
+        return;
+      }
+
+      this.autocompleteList.innerHTML = results.map((item, idx) => {
+        const region = [item.admin1, item.country].filter(Boolean).join(', ');
+        return `
+          <div class="autocomplete-item" role="option" data-index="${idx}" id="geo-opt-${idx}">
+            <div class="autocomplete-main">${item.name}</div>
+            <div class="autocomplete-sub">${region}</div>
+          </div>
+        `;
+      }).join('');
+
       this.autocompleteList.classList.add('open');
-      return;
-    }
 
-    this.autocompleteList.innerHTML = results.map((item, idx) => {
-      const region = [item.admin1, item.country].filter(Boolean).join(', ');
-      return `
-        <div class="autocomplete-item" role="option" data-index="${idx}" id="geo-opt-${idx}">
-          <div class="autocomplete-main">${item.name}</div>
-          <div class="autocomplete-sub">${region}</div>
-        </div>
-      `;
-    }).join('');
-
-    this.autocompleteList.classList.add('open');
-
-    // Click handler for items
-    this.autocompleteList.querySelectorAll('.autocomplete-item').forEach(el => {
-      el.addEventListener('click', () => {
-        const idx = Number(el.dataset.index);
-        const selected = this.searchResults[idx];
-        if (selected) {
-          this.selectLocation(selected);
-        }
+      // Click handler for items
+      this.autocompleteList.querySelectorAll('.autocomplete-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = Number(el.dataset.index);
+          const selected = this.searchResults[idx];
+          if (selected) {
+            this.selectLocation(selected);
+          }
+        });
       });
-    });
+    } catch (err) {
+      if (this.autocompleteList) {
+        this.autocompleteList.innerHTML = `
+          <div class="autocomplete-item" style="cursor: default; color: var(--status-danger);">
+            ⚠️ Live search service unavailable. Please check your internet connection.
+          </div>
+        `;
+        this.autocompleteList.classList.add('open');
+      }
+    }
   }
 
   handleSearchKeyboardNavigation(e) {
@@ -506,23 +517,19 @@ class SkyPulseApp {
   async loadWeatherForLocation(location) {
     this.setSkeletonState(true);
     this.announce(`Fetching live weather for ${location.name}...`);
+    this.hideErrorCard();
 
     try {
       const data = await fetchWeatherData(location);
       this.weatherData = data;
-
-      if (data.isMock) {
-        this.showStatusBanner('Displaying local offline weather data.', 'offline');
-      } else {
-        this.hideStatusBanner();
-      }
+      this.hideStatusBanner();
 
       this.renderAllWeatherData();
       this.updateFavoriteButtonState();
       this.renderQuickPills();
 
       const weatherInfo = getWeatherInfo(data.current.weather_code, data.current.is_day);
-      this.announce(`Weather loaded for ${location.name}: ${Math.round(data.current.temperature_2m)} degrees Celsius, ${weatherInfo.description}`);
+      this.announce(`Live weather loaded for ${location.name}: ${Math.round(data.current.temperature_2m)} degrees Celsius, ${weatherInfo.description}`);
 
       // Update ambient canvas and audio
       if (this.ambientCanvas) {
@@ -531,10 +538,62 @@ class SkyPulseApp {
       weatherAudio.setWeatherMode(weatherInfo.category);
 
     } catch (err) {
-      console.error('Failed to load weather:', err);
-      this.showStatusBanner('Unable to load weather data. Please try again.', 'error');
+      console.error('Failed to load live weather:', err);
+      const friendlyMsg = `Unable to retrieve live weather for "${location.name}". Please check your internet connection and try again.`;
+      this.showStatusBanner(friendlyMsg, 'error');
+      this.showErrorCard(location, err.message);
+      this.announce(friendlyMsg);
     } finally {
       this.setSkeletonState(false);
+    }
+  }
+
+  showErrorCard(location, detail) {
+    let errorCard = document.getElementById('weather-error-card');
+    if (!errorCard) {
+      errorCard = document.createElement('div');
+      errorCard.id = 'weather-error-card';
+      errorCard.className = 'weather-error-card';
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) {
+        mainContent.insertBefore(errorCard, mainContent.firstChild);
+      }
+    }
+
+    errorCard.style.display = 'flex';
+    errorCard.innerHTML = `
+      <div class="error-icon-circle" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h3 class="error-title">Live Weather Unavailable</h3>
+      <p class="error-message">
+        We could not retrieve live weather information for <strong>${location.name}</strong> from the weather service.<br>
+        <span style="font-size: 0.85rem; opacity: 0.85; margin-top: 6px; display: inline-block;">${detail || 'Network connection issue or service timeout.'}</span>
+      </p>
+      <div class="error-actions">
+        <button id="error-retry-btn" class="geo-btn" type="button" aria-label="Retry loading live weather">
+          ${getIcon('refresh')}
+          <span>Retry Live Fetch</span>
+        </button>
+      </div>
+    `;
+
+    const retryBtn = document.getElementById('error-retry-btn');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        this.loadWeatherForLocation(location);
+      });
+    }
+  }
+
+  hideErrorCard() {
+    const errorCard = document.getElementById('weather-error-card');
+    if (errorCard) {
+      errorCard.style.display = 'none';
     }
   }
 

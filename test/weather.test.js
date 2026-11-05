@@ -20,7 +20,7 @@ import {
 
 import {
   DEFAULT_LOCATIONS,
-  generateMockWeather
+  fetchWeatherData
 } from '../js/weather-api.js';
 
 import { StorageManager } from '../js/favorites.js';
@@ -112,33 +112,22 @@ test('Default Locations - validity and completeness', () => {
   }
 });
 
-test('Mock Weather Generator - produces complete weather payload schema', () => {
-  const loc = DEFAULT_LOCATIONS[0];
-  const mock = generateMockWeather(loc);
+test('Live Weather API - rejects on network failure without returning mock data', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    return { ok: false, status: 503 };
+  };
 
-  assert.equal(mock.isMock, true);
-  assert.equal(mock.location.name, loc.name);
-
-  // Current
-  assert.equal(typeof mock.current.temperature_2m, 'number');
-  assert.equal(typeof mock.current.relative_humidity_2m, 'number');
-  assert.equal(typeof mock.current.weather_code, 'number');
-  assert.equal(typeof mock.current.wind_speed_10m, 'number');
-
-  // Hourly 24h
-  assert.equal(mock.hourly.time.length, 24);
-  assert.equal(mock.hourly.temperature_2m.length, 24);
-  assert.equal(mock.hourly.precipitation_probability.length, 24);
-
-  // Daily 7d
-  assert.equal(mock.daily.time.length, 7);
-  assert.equal(mock.daily.temperature_2m_max.length, 7);
-  assert.equal(mock.daily.temperature_2m_min.length, 7);
-  assert.equal(mock.daily.sunrise.length, 7);
-  assert.equal(mock.daily.sunset.length, 7);
-
-  // Air Quality
-  assert.ok(mock.air_quality.us_aqi > 0);
+  try {
+    await assert.rejects(
+      async () => {
+        await fetchWeatherData({ latitude: 12.34, longitude: 56.78, name: 'TestCity' });
+      },
+      /Unable to retrieve live forecast|Network connection error/
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test('Icons Library - returns valid SVG strings', () => {
