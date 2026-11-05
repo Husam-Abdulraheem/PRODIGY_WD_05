@@ -9,40 +9,13 @@ const ANIMATIONS_KEY = 'sky_pulse_animations';
 const SOUND_KEY = 'sky_pulse_sound';
 const USER_LOC_KEY = 'sky_pulse_user_loc';
 
-export const DEFAULT_FAVORITES = [
-  {
-    name: 'Tokyo',
-    country: 'Japan',
-    country_code: 'JP',
-    admin1: 'Tokyo Prefecture',
-    latitude: 35.6895,
-    longitude: 139.6917
-  },
-  {
-    name: 'London',
-    country: 'United Kingdom',
-    country_code: 'GB',
-    admin1: 'England',
-    latitude: 51.5074,
-    longitude: -0.1278
-  },
-  {
-    name: 'New York',
-    country: 'United States',
-    country_code: 'US',
-    admin1: 'New York',
-    latitude: 40.7128,
-    longitude: -74.0060
-  }
-];
-
 export class StorageManager {
   static getFavorites() {
     try {
       const data = localStorage.getItem(FAVORITES_KEY);
-      return data ? JSON.parse(data) : DEFAULT_FAVORITES;
+      return data ? JSON.parse(data) : [];
     } catch {
-      return DEFAULT_FAVORITES;
+      return [];
     }
   }
 

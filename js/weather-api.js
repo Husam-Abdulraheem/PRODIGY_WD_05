@@ -1,78 +1,9 @@
 /**
  * Open-Meteo Live Weather & Geocoding API Client
- * Pure live-only mode: No mock data or simulated fallbacks.
+ * Pure live-only mode: Zero mock data, zero hardcoded locations.
  */
 
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache to avoid rate limits
-
-/**
- * Popular major city coordinates for quick live weather querying
- */
-export const DEFAULT_LOCATIONS = [
-  {
-    name: 'London',
-    country: 'United Kingdom',
-    country_code: 'GB',
-    admin1: 'England',
-    latitude: 51.5074,
-    longitude: -0.1278,
-    timezone: 'Europe/London'
-  },
-  {
-    name: 'Tokyo',
-    country: 'Japan',
-    country_code: 'JP',
-    admin1: 'Tokyo Prefecture',
-    latitude: 35.6895,
-    longitude: 139.6917,
-    timezone: 'Asia/Tokyo'
-  },
-  {
-    name: 'New York',
-    country: 'United States',
-    country_code: 'US',
-    admin1: 'New York',
-    latitude: 40.7128,
-    longitude: -74.0060,
-    timezone: 'America/New_York'
-  },
-  {
-    name: 'Paris',
-    country: 'France',
-    country_code: 'FR',
-    admin1: 'Île-de-France',
-    latitude: 48.8566,
-    longitude: 2.3522,
-    timezone: 'Europe/Paris'
-  },
-  {
-    name: 'Dubai',
-    country: 'United Arab Emirates',
-    country_code: 'AE',
-    admin1: 'Dubai',
-    latitude: 25.2048,
-    longitude: 55.2708,
-    timezone: 'Asia/Dubai'
-  },
-  {
-    name: 'Sydney',
-    country: 'Australia',
-    country_code: 'AU',
-    admin1: 'New South Wales',
-    latitude: -33.8688,
-    longitude: 151.2093,
-    timezone: 'Australia/Sydney'
-  },
-  {
-    name: 'Cairo',
-    country: 'Egypt',
-    country_code: 'EG',
-    admin1: 'Cairo Governorate',
-    latitude: 30.0444,
-    longitude: 31.2357,
-    timezone: 'Africa/Cairo'
-  }
-];
 
 /**
  * Searches real locations worldwide using the Open-Meteo Geocoding API
@@ -95,16 +26,16 @@ export async function searchLocations(query) {
   }
 
   const endpoint = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cleanQuery)}&count=10&language=en&format=json`;
-  
+
   let res;
   try {
     res = await fetch(endpoint);
-  } catch (netErr) {
+  } catch {
     throw new Error('Unable to reach geocoding service. Please check your internet connection.');
   }
 
   if (!res.ok) {
-    throw new Error(`Geocoding server error: HTTP ${res.status}`);
+    throw new Error(`Geocoding service error: HTTP ${res.status}`);
   }
 
   const data = await res.json();
@@ -197,8 +128,8 @@ export async function fetchWeatherData(location) {
       fetch(weatherUrl),
       fetch(aqiUrl)
     ]);
-  } catch (netErr) {
-    throw new Error('Network connection error: Unable to contact Open-Meteo live weather API. Please verify your internet connection.');
+  } catch {
+    throw new Error('Network connection error: Unable to contact live weather API. Please verify your internet connection.');
   }
 
   if (!weatherRes || weatherRes.status !== 'fulfilled' || !weatherRes.value.ok) {

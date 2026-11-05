@@ -6,8 +6,7 @@
 import {
   searchLocations,
   reverseGeocode,
-  fetchWeatherData,
-  DEFAULT_LOCATIONS
+  fetchWeatherData
 } from './js/weather-api.js';
 
 import {
@@ -32,7 +31,7 @@ class SkyPulseApp {
   constructor() {
     const savedUserLoc = StorageManager.getUserLocation();
     this.detectedUserLocation = savedUserLoc;
-    this.currentLocation = savedUserLoc || DEFAULT_LOCATIONS[0];
+    this.currentLocation = savedUserLoc || null;
     this.weatherData = null;
     this.unit = StorageManager.getUnit();
     this.hourlyView = 'cards';
@@ -45,9 +44,14 @@ class SkyPulseApp {
     this.initHourlyChart();
     this.initEventListeners();
     this.initClock();
+    this.renderQuickPills();
 
     // Load initial weather
-    this.loadWeatherForLocation(this.currentLocation);
+    if (this.currentLocation) {
+      this.loadWeatherForLocation(this.currentLocation);
+    } else {
+      this.handleDetectLocation();
+    }
   }
 
   initDOMElements() {
@@ -933,14 +937,6 @@ class SkyPulseApp {
       }
     });
 
-    // If still short, add default presets
-    DEFAULT_LOCATIONS.forEach(d => {
-      const key = `${d.name}_${d.country}`;
-      if (!seen.has(key) && allPills.length < 7) {
-        seen.add(key);
-        allPills.push({ ...d, isFav: false });
-      }
-    });
 
     const otherPillsHtml = allPills.slice(0, 7).map(loc => {
       const isActive = !isMyLocationActive && this.currentLocation && loc.name === this.currentLocation.name;

@@ -19,7 +19,6 @@ import {
 } from '../js/wmo-codes.js';
 
 import {
-  DEFAULT_LOCATIONS,
   fetchWeatherData
 } from '../js/weather-api.js';
 
@@ -100,15 +99,34 @@ test('Unit Conversions - mathematical precision', () => {
   assert.equal(Number(mmToInches(25.4).toFixed(1)), 1.0);
 });
 
-test('Default Locations - validity and completeness', () => {
-  assert.ok(DEFAULT_LOCATIONS.length >= 5);
-  for (const loc of DEFAULT_LOCATIONS) {
-    assert.ok(loc.name, 'Location missing name');
-    assert.ok(loc.country, 'Location missing country');
-    assert.equal(typeof loc.latitude, 'number');
-    assert.equal(typeof loc.longitude, 'number');
-    assert.ok(loc.latitude >= -90 && loc.latitude <= 90);
-    assert.ok(loc.longitude >= -180 && loc.longitude <= 180);
+test('Live Weather API - parses successful live response correctly', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (url.includes('air-quality')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ current: { us_aqi: 45 } })
+      };
+    }
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        current: { temperature_2m: 22.5, weather_code: 1, is_day: 1 },
+        hourly: { time: ['2026-11-05T12:00:00Z'], temperature_2m: [22.5] },
+        daily: { time: ['2026-11-05'], temperature_2m_max: [25], temperature_2m_min: [18] }
+      })
+    };
+  };
+
+  try {
+    const data = await fetchWeatherData({ latitude: 51.5, longitude: -0.1, name: 'London' });
+    assert.equal(data.current.temperature_2m, 22.5);
+    assert.equal(data.air_quality.us_aqi, 45);
+    assert.equal(data.location.name, 'London');
+  } finally {
+    globalThis.fetch = originalFetch;
   }
 });
 

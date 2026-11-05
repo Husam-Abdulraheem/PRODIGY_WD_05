@@ -98,7 +98,7 @@ npm run check
 3. `AQI Calculator`: Evaluates US AQI thresholds and health ratings.
 4. `Wind Cardinal Compass`: Validates 360° to 16-point cardinal compass conversion.
 5. `Unit Conversions`: Verifies mathematical accuracy of Celsius to Fahrenheit, km/h to mph, and hPa to inHg.
-6. `Default Locations`: Validates coordinates and metadata for all city presets.
+6. `Live Weather API Parsing`: Verifies successful live Open-Meteo response parsing.
 7. `Live Weather API Rejection`: Confirms API rejects network failures cleanly without returning mock data.
 8. `Icons Library`: Confirms all SVG icon strings render valid vector markup.
 9. `StorageManager`: Verifies user location persistence and retrieval.
