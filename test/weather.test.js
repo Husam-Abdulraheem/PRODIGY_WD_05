@@ -179,3 +179,94 @@ test('StorageManager - handles user location persistence', () => {
   delete globalThis.localStorage;
 });
 
+test('WeatherCanvas - initializes and adapts to weather states and themes', async () => {
+  const { WeatherCanvas } = await import('../js/weather-canvas.js');
+
+  // Mock DOM environment for Node test runner
+  globalThis.window = {
+    innerWidth: 1024,
+    innerHeight: 768,
+    devicePixelRatio: 1,
+    addEventListener: () => {},
+    matchMedia: () => ({ matches: false, addEventListener: () => {} })
+  };
+  globalThis.document = {
+    hidden: false,
+    addEventListener: () => {},
+    documentElement: {
+      getAttribute: () => 'dark',
+      setAttribute: () => {}
+    },
+    querySelector: () => null
+  };
+
+  const mockCtx = {
+    scale: () => {},
+    clearRect: () => {},
+    createRadialGradient: () => ({ addColorStop: () => {} }),
+    createLinearGradient: () => ({ addColorStop: () => {} }),
+    beginPath: () => {},
+    arc: () => {},
+    ellipse: () => {},
+    moveTo: () => {},
+    lineTo: () => {},
+    closePath: () => {},
+    fill: () => {},
+    stroke: () => {},
+    fillRect: () => {},
+    save: () => {},
+    restore: () => {},
+    translate: () => {},
+    rotate: () => {}
+  };
+
+  const mockCanvas = {
+    getContext: () => mockCtx,
+    width: 0,
+    height: 0
+  };
+
+  const wc = new WeatherCanvas(mockCanvas);
+  assert.equal(wc.theme, 'dark');
+
+  // Test Sunny Day
+  wc.setWeather('clear', true, 'light');
+  assert.equal(wc.weatherType, 'clear');
+  assert.equal(wc.isDay, true);
+  assert.equal(wc.theme, 'light');
+  assert.ok(wc.particles.length > 0);
+
+  // Test Theme Switch to Dark
+  wc.setTheme('dark');
+  assert.equal(wc.theme, 'dark');
+
+  // Test Rain
+  wc.setWeather('rain', false, 'dark');
+  assert.equal(wc.weatherType, 'rain');
+  assert.equal(wc.isDay, false);
+  assert.ok(wc.particles.length > 0);
+
+  // Test Thunder
+  wc.setWeather('thunder', true, 'light');
+  assert.equal(wc.weatherType, 'thunder');
+
+  // Test Snow
+  wc.setWeather('snow', true, 'light');
+  assert.equal(wc.weatherType, 'snow');
+  assert.ok(wc.particles.length > 0);
+
+  // Test Clouds
+  wc.setWeather('clouds', true, 'light');
+  assert.equal(wc.weatherType, 'clouds');
+  assert.ok(wc.clouds.length > 0);
+
+  // Test Fog
+  wc.setWeather('fog', true, 'dark');
+  assert.equal(wc.weatherType, 'fog');
+
+  // Clean up globals
+  delete globalThis.window;
+  delete globalThis.document;
+});
+
+

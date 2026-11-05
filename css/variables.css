@@ -83,3 +83,33 @@
 :root:has(> head > meta[name="color-scheme"][content="light"]) {
   color-scheme: light;
 }
+
+/* Atmospheric Weather State Background Adapters (Adaptive to Light & Dark) */
+html[data-weather="clear"][data-is-day="true"] {
+  --bg-gradient: light-dark(
+    radial-gradient(circle at 82% 16%, rgba(254, 240, 199, 0.7) 0%, rgba(240, 244, 249, 1) 75%),
+    radial-gradient(circle at 82% 16%, rgba(55, 35, 10, 0.45) 0%, rgba(9, 13, 22, 1) 75%)
+  );
+}
+
+html[data-weather="rain"] {
+  --bg-gradient: light-dark(
+    radial-gradient(circle at 50% 20%, rgba(219, 234, 254, 0.65) 0%, rgba(235, 243, 250, 1) 85%),
+    radial-gradient(circle at 50% 20%, rgba(15, 30, 50, 0.55) 0%, rgba(9, 13, 22, 1) 85%)
+  );
+}
+
+html[data-weather="thunder"] {
+  --bg-gradient: light-dark(
+    radial-gradient(circle at 50% 12%, rgba(237, 233, 254, 0.65) 0%, rgba(230, 235, 245, 1) 85%),
+    radial-gradient(circle at 50% 12%, rgba(35, 25, 75, 0.6) 0%, rgba(9, 13, 22, 1) 85%)
+  );
+}
+
+html[data-weather="snow"] {
+  --bg-gradient: light-dark(
+    radial-gradient(circle at 50% 20%, rgba(238, 248, 255, 0.75) 0%, rgba(238, 244, 250, 1) 85%),
+    radial-gradient(circle at 50% 20%, rgba(18, 35, 55, 0.55) 0%, rgba(9, 13, 22, 1) 85%)
+  );
+}
+

@@ -132,6 +132,7 @@ class SkyPulseApp {
     const canvas = document.getElementById('weather-canvas');
     if (canvas) {
       this.ambientCanvas = new WeatherCanvas(canvas);
+      this.ambientCanvas.setTheme(themeManager.currentResolvedTheme);
       const enabled = StorageManager.getAnimationsEnabled();
       this.ambientCanvas.setEnabled(enabled);
       if (this.animToggleBtn) {
@@ -155,6 +156,9 @@ class SkyPulseApp {
       themeManager.onThemeChange(({ resolved }) => {
         this.themeToggleBtn.title = `Switch Theme (Currently ${resolved})`;
         this.themeToggleBtn.setAttribute('aria-label', `Switch Theme (Currently ${resolved})`);
+        if (this.ambientCanvas) {
+          this.ambientCanvas.setTheme(resolved);
+        }
       });
     }
 
@@ -535,9 +539,13 @@ class SkyPulseApp {
       const weatherInfo = getWeatherInfo(data.current.weather_code, data.current.is_day);
       this.announce(`Live weather loaded for ${location.name}: ${Math.round(data.current.temperature_2m)} degrees Celsius, ${weatherInfo.description}`);
 
+      // Set document semantic weather state
+      document.documentElement.setAttribute('data-weather', weatherInfo.category);
+      document.documentElement.setAttribute('data-is-day', String(Boolean(data.current.is_day)));
+
       // Update ambient canvas and audio
       if (this.ambientCanvas) {
-        this.ambientCanvas.setWeather(weatherInfo.category, data.current.is_day);
+        this.ambientCanvas.setWeather(weatherInfo.category, data.current.is_day, themeManager.currentResolvedTheme);
       }
       weatherAudio.setWeatherMode(weatherInfo.category);
 
