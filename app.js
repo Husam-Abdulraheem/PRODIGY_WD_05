@@ -687,6 +687,7 @@ class SkyPulseApp {
     const uv = current.uv_index || 0;
     const uvInfo = getUVInfo(uv);
     this.uvVal.textContent = `${uv.toFixed(1)}`;
+    this.uvBadge.style.display = 'inline-block';
     this.uvBadge.textContent = uvInfo.level;
     this.uvBadge.style.backgroundColor = `${uvInfo.color}22`;
     this.uvBadge.style.color = uvInfo.color;
@@ -731,6 +732,7 @@ class SkyPulseApp {
       const aqi = Math.round(air_quality.us_aqi || 35);
       const aqiInfo = getAQIInfo(aqi);
       this.aqiVal.textContent = `${aqi}`;
+      this.aqiBadge.style.display = 'inline-block';
       this.aqiBadge.textContent = aqiInfo.rating;
       this.aqiBadge.style.backgroundColor = `${aqiInfo.color}22`;
       this.aqiBadge.style.color = aqiInfo.color;

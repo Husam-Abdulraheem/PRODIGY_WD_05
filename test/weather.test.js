@@ -269,4 +269,28 @@ test('WeatherCanvas - initializes and adapts to weather states and themes', asyn
   delete globalThis.document;
 });
 
+test('index.html - pure live mode with no mock metric data', async () => {
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const htmlPath = path.resolve('index.html');
+  const html = fs.readFileSync(htmlPath, 'utf8');
+
+  // Verify metric cards contain no hardcoded demo values
+  assert.ok(html.includes('id="metric-humidity-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-wind-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-uv-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-aqi-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-pressure-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-visibility-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="metric-cloud-val" class="metric-card-value">--<'));
+  assert.ok(html.includes('id="sunrise-time">--:--<'));
+  assert.ok(html.includes('id="sunset-time">--:--<'));
+
+  // Verify lifestyle contains waiting messages, not mock advice
+  assert.ok(html.includes('id="lifestyle-clothing" class="lifestyle-advice">Awaiting live weather data...<'));
+  assert.ok(html.includes('id="lifestyle-umbrella" class="lifestyle-advice">Awaiting live weather data...<'));
+  assert.ok(html.includes('id="lifestyle-outdoor" class="lifestyle-advice">Awaiting live weather data...<'));
+});
+
+
 

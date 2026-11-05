@@ -241,8 +241,8 @@
                 Humidity
               </span>
             </div>
-            <div id="metric-humidity-val" class="metric-card-value">62%</div>
-            <div id="metric-humidity-sub" class="metric-card-subtext">Comfortable dew point.</div>
+            <div id="metric-humidity-val" class="metric-card-value">--</div>
+            <div id="metric-humidity-sub" class="metric-card-subtext">Awaiting live data...</div>
           </article>
 
           <!-- Wind & Compass -->
@@ -261,8 +261,8 @@
                 <div id="compass-needle" class="compass-needle"></div>
               </div>
               <div>
-                <div id="metric-wind-val" class="metric-card-value">14 km/h</div>
-                <div id="metric-wind-sub" class="metric-card-subtext">Wind from WNW.</div>
+                <div id="metric-wind-val" class="metric-card-value">--</div>
+                <div id="metric-wind-sub" class="metric-card-subtext">Awaiting live data...</div>
               </div>
             </div>
           </article>
@@ -277,11 +277,11 @@
                 </svg>
                 UV Index
               </span>
-              <span id="metric-uv-badge" style="padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;">Moderate</span>
+              <span id="metric-uv-badge" style="display: none; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;"></span>
             </div>
-            <div id="metric-uv-val" class="metric-card-value">4.2</div>
+            <div id="metric-uv-val" class="metric-card-value">--</div>
             <div class="uv-progress-bar" aria-hidden="true">
-              <div id="metric-uv-pin" class="uv-indicator-pin" style="left: 35%;"></div>
+              <div id="metric-uv-pin" class="uv-indicator-pin" style="left: 0%;"></div>
             </div>
           </article>
 
@@ -295,10 +295,10 @@
                 </svg>
                 Air Quality
               </span>
-              <span id="metric-aqi-badge" style="padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;">Good</span>
+              <span id="metric-aqi-badge" style="display: none; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;"></span>
             </div>
-            <div id="metric-aqi-val" class="metric-card-value">32</div>
-            <div id="metric-aqi-sub" class="metric-card-subtext">US AQI rating is healthy.</div>
+            <div id="metric-aqi-val" class="metric-card-value">--</div>
+            <div id="metric-aqi-sub" class="metric-card-subtext">Awaiting live data...</div>
           </article>
 
           <!-- Pressure -->
@@ -312,8 +312,8 @@
                 Pressure
               </span>
             </div>
-            <div id="metric-pressure-val" class="metric-card-value">1014 hPa</div>
-            <div id="metric-pressure-sub" class="metric-card-subtext">Normal barometric pressure.</div>
+            <div id="metric-pressure-val" class="metric-card-value">--</div>
+            <div id="metric-pressure-sub" class="metric-card-subtext">Awaiting live data...</div>
           </article>
 
           <!-- Visibility -->
@@ -327,8 +327,8 @@
                 Visibility
               </span>
             </div>
-            <div id="metric-visibility-val" class="metric-card-value">10.0 km</div>
-            <div id="metric-visibility-sub" class="metric-card-subtext">Clear view.</div>
+            <div id="metric-visibility-val" class="metric-card-value">--</div>
+            <div id="metric-visibility-sub" class="metric-card-subtext">Awaiting live data...</div>
           </article>
 
           <!-- Cloud Cover -->
@@ -341,8 +341,8 @@
                 Cloud Cover
               </span>
             </div>
-            <div id="metric-cloud-val" class="metric-card-value">25%</div>
-            <div id="metric-cloud-sub" class="metric-card-subtext">Scattered sky cover.</div>
+            <div id="metric-cloud-val" class="metric-card-value">--</div>
+            <div id="metric-cloud-sub" class="metric-card-subtext">Awaiting live data...</div>
           </article>
 
           <!-- Sunrise & Sunset with Solar Progress Arc -->
@@ -363,12 +363,12 @@
                 <!-- Arc trajectory -->
                 <path id="sun-arc-progress" d="M 20 50 Q 100 8 180 50" fill="none" stroke="var(--border-strong)" stroke-width="2" stroke-dasharray="4,4" />
                 <!-- Moving Sun Dot -->
-                <circle id="sun-arc-dot" cx="100" cy="20" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2" />
+                <circle id="sun-arc-dot" cx="100" cy="50" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2" />
               </svg>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-              <span>🌅 Rise: <span id="sunrise-time">06:24 AM</span></span>
-              <span>🌇 Set: <span id="sunset-time">06:48 PM</span></span>
+              <span>🌅 Rise: <span id="sunrise-time">--:--</span></span>
+              <span>🌇 Set: <span id="sunset-time">--:--</span></span>
             </div>
           </article>
         </div>
@@ -436,7 +436,7 @@
             </div>
             <div class="lifestyle-content">
               <span class="lifestyle-title">What to Wear</span>
-              <p id="lifestyle-clothing" class="lifestyle-advice">Light, comfortable clothing.</p>
+              <p id="lifestyle-clothing" class="lifestyle-advice">Awaiting live weather data...</p>
             </div>
           </div>
 
@@ -451,7 +451,7 @@
             </div>
             <div class="lifestyle-content">
               <span class="lifestyle-title">Precipitation & Umbrella</span>
-              <p id="lifestyle-umbrella" class="lifestyle-advice">No umbrella required today.</p>
+              <p id="lifestyle-umbrella" class="lifestyle-advice">Awaiting live weather data...</p>
             </div>
           </div>
 
@@ -465,7 +465,7 @@
             </div>
             <div class="lifestyle-content">
               <span class="lifestyle-title">Outdoor Activities</span>
-              <p id="lifestyle-outdoor" class="lifestyle-advice">Great weather for outdoor workouts and jogging.</p>
+              <p id="lifestyle-outdoor" class="lifestyle-advice">Awaiting live weather data...</p>
             </div>
           </div>
         </div>
