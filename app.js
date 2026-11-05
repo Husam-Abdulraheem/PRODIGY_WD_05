@@ -1,5 +1,5 @@
 /**
- * SkyPulse Weather Application Controller
+ * ClearSky Weather Application Controller
  * Orchestrates API calls, UI rendering, search autocomplete, geolocation, and user interactions.
  */
 
@@ -27,7 +27,7 @@ import { weatherAudio } from './js/audio.js';
 import { HourlyChart } from './js/chart.js';
 import { getIcon } from './js/icons.js';
 
-class SkyPulseApp {
+class ClearSkyApp {
   constructor() {
     const savedUserLoc = StorageManager.getUserLocation();
     this.detectedUserLocation = savedUserLoc;
@@ -1013,7 +1013,7 @@ class SkyPulseApp {
     const { location, current } = this.weatherData;
     const temp = this.unit === 'metric' ? Math.round(current.temperature_2m) : Math.round(celsiusToFahrenheit(current.temperature_2m));
     const info = getWeatherInfo(current.weather_code, current.is_day);
-    const text = `Current weather in ${location.name}: ${temp}${this.unit === 'metric' ? '°C' : '°F'}, ${info.description}! Checked via SkyPulse.`;
+    const text = `Current weather in ${location.name}: ${temp}${this.unit === 'metric' ? '°C' : '°F'}, ${info.description}! Checked via ClearSky.`;
 
     if (navigator.share) {
       try {
@@ -1041,5 +1041,5 @@ class SkyPulseApp {
 
 // Bootstrap application on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-  window.__skyPulseApp = new SkyPulseApp();
+  window.__clearSkyApp = new ClearSkyApp();
 });

@@ -20,15 +20,26 @@
 }
 
 .brand-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #2563eb, #0284c7);
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  position: relative;
+  filter: drop-shadow(0 4px 14px var(--accent-glow));
+  transition: transform var(--transition-normal);
+}
+
+.brand-wrapper:hover .brand-icon {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.brand-emblem-svg {
+  overflow: visible;
+  display: block;
 }
 
 .brand-title {

@@ -1,11 +1,11 @@
-# SkyPulse — Real-Time Weather Dashboard ⛅
+# ClearSky — Real-Time Weather Dashboard ⛅
 
 [![Prodigy InfoTech](https://img.shields.io/badge/Prodigy_InfoTech-Task--05-blue.svg)](https://prodigyinfotech.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Verification: Passed](https://img.shields.io/badge/Tests-8%20Passed-success.svg)](test/weather.test.js)
+[![Verification: Passed](https://img.shields.io/badge/Tests-13%20Passed-success.svg)](test/weather.test.js)
 [![Accessibility: WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-brightgreen.svg)](#accessibility)
 
-**SkyPulse** is a responsive, feature-rich, accessible real-time weather dashboard web application built for **Prodigy InfoTech Web Development Internship Task-05**. It dynamically fetches live atmospheric conditions, 24-hour hourly projections, 7-day extended forecasts, and air quality metrics based either on the user's geographic location or any user-inputted city worldwide using the **Open-Meteo Global Forecasting API**.
+**ClearSky** is a responsive, feature-rich, accessible real-time weather dashboard web application built for **Prodigy InfoTech Web Development Internship Task-05**. It dynamically fetches live atmospheric conditions, 24-hour hourly projections, 7-day extended forecasts, and air quality metrics based either on the user's geographic location or any user-inputted city worldwide using the **Open-Meteo Global Forecasting API**.
 
 ---
 
@@ -92,7 +92,7 @@ npm run build
 npm run check
 ```
 
-### Test Suite Coverage:
+### Test Suite Coverage (13 Tests):
 1. `WMO Code Interpreter`: Maps codes 0–99 to semantic categories, icons, and recommendations.
 2. `UV Index Calculator`: Verifies risk boundaries and color tokens.
 3. `AQI Calculator`: Evaluates US AQI thresholds and health ratings.
@@ -101,7 +101,11 @@ npm run check
 6. `Live Weather API Parsing`: Verifies successful live Open-Meteo response parsing.
 7. `Live Weather API Rejection`: Confirms API rejects network failures cleanly without returning mock data.
 8. `Icons Library`: Confirms all SVG icon strings render valid vector markup.
-9. `StorageManager`: Verifies user location persistence and retrieval.
+9. `StorageManager Location`: Verifies user location persistence and retrieval.
+10. `StorageManager Favorites`: Verifies starring and unstarring favorite locations.
+11. `WeatherCanvas Visuals`: Tests dynamic canvas weather states and light/dark theme adaptivity.
+12. `Zero Mock Data Integrity`: Enforces pure live mode and verifies index.html contains no hardcoded mock metrics.
+13. `WeatherAudioEngine`: Tests real-time Web Audio soundscapes synchronized with weather conditions.
 
 ---
 

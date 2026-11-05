@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SkyPulse - Modern, responsive real-time weather dashboard web application fetching live atmospheric conditions, hourly temperature curves, 7-day extended forecasts, and air quality using Open-Meteo API.">
+  <meta name="description" content="ClearSky - Modern, responsive real-time weather dashboard web application fetching live atmospheric conditions, hourly temperature curves, 7-day extended forecasts, and air quality using Open-Meteo API.">
   <meta name="theme-color" content="#2563eb">
   <meta name="color-scheme" content="light dark">
   <script>
@@ -17,7 +17,7 @@
     } catch (e) {}
   </script>
 
-  <title>SkyPulse | Real-Time Weather Dashboard</title>
+  <title>ClearSky | Real-Time Weather Dashboard</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,13 +41,31 @@
     <!-- Header -->
     <header class="app-header" role="banner">
       <div class="brand-wrapper">
-        <div class="brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+        <div class="brand-icon floating-emblem" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="36" height="36" fill="none" class="brand-emblem-svg">
+            <defs>
+              <linearGradient id="emblem-sun-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fbbf24" />
+                <stop offset="100%" stop-color="#f59e0b" />
+              </linearGradient>
+              <linearGradient id="emblem-cloud-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#60a5fa" />
+                <stop offset="100%" stop-color="#2563eb" />
+              </linearGradient>
+            </defs>
+            <!-- Glowing Sun -->
+            <g class="emblem-sun">
+              <circle cx="21" cy="11" r="5" fill="url(#emblem-sun-grad)" />
+              <line x1="21" y1="2.5" x2="21" y2="4.5" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" />
+              <line x1="27.5" y1="11" x2="29.5" y2="11" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" />
+              <line x1="25.5" y1="6.5" x2="27" y2="5" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" />
+            </g>
+            <!-- Floating Clean Modern Cloud -->
+            <path d="M22 23H10a6 6 0 0 1-1.2-11.88A7.5 7.5 0 0 1 22.8 13.5 5 5 0 0 1 22 23Z" fill="url(#emblem-cloud-grad)" />
           </svg>
         </div>
         <div>
-          <h1 class="brand-title">SkyPulse</h1>
+          <h1 class="brand-title">ClearSky</h1>
           <p class="brand-subtitle">Prodigy InfoTech • Task-05</p>
         </div>
       </div>
@@ -474,7 +492,7 @@
 
     <!-- Footer -->
     <footer class="app-footer" role="contentinfo">
-      <p>SkyPulse Weather Dashboard • Built for <strong>Prodigy InfoTech</strong> Web Development Internship (Task-05)</p>
+      <p>ClearSky Weather Dashboard • Built for <strong>Prodigy InfoTech</strong> Web Development Internship (Task-05)</p>
       <div class="footer-links">
         <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather Data by Open-Meteo</a>
         <span>•</span>

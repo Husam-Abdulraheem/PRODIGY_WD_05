@@ -1,5 +1,5 @@
 /**
- * Automated Unit Test Suite for SkyPulse Weather Application
+ * Automated Unit Test Suite for ClearSky Weather Application
  * Executed via Node.js native test runner: node --test test/weather.test.js
  */
 
