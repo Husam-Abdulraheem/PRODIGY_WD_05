@@ -1,11 +1,15 @@
 # ClearSky — Real-Time Weather Dashboard ⛅
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://husam-abdulraheem.github.io/PRODIGY_WD_05/)
+[![Deploy to GitHub Pages](https://github.com/Husam-Abdulraheem/PRODIGY_WD_05/actions/workflows/deploy.yml/badge.svg)](https://github.com/Husam-Abdulraheem/PRODIGY_WD_05/actions/workflows/deploy.yml)
 [![Prodigy InfoTech](https://img.shields.io/badge/Prodigy_InfoTech-Task--05-blue.svg)](https://prodigyinfotech.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Verification: Passed](https://img.shields.io/badge/Tests-13%20Passed-success.svg)](test/weather.test.js)
 [![Accessibility: WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-brightgreen.svg)](#accessibility)
 
 **ClearSky** is a responsive, feature-rich, accessible real-time weather dashboard web application built for **Prodigy InfoTech Web Development Internship Task-05**. It dynamically fetches live atmospheric conditions, 24-hour hourly projections, 7-day extended forecasts, and air quality metrics based either on the user's geographic location or any user-inputted city worldwide using the **Open-Meteo Global Forecasting API**.
+
+🌐 **Live URL**: [https://husam-abdulraheem.github.io/PRODIGY_WD_05/](https://husam-abdulraheem.github.io/PRODIGY_WD_05/)
 
 ---
 
